@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ব্যালট গণনা সিস্টেম - নির্বাচনী ব্যালট গণনার জন্য সহজ এবং কার্যকর সিস্টেম">
+    <meta name="keywords" content="ব্যালট গণনা, ballot counter, election, নির্বাচন, vote counting">
+    <title>ব্যালট গণনা সিস্টেম</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans Bengali', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 25px;
+            font-size: 24px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 16px;
+        }
+        
+        input[type="number"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Noto Sans Bengali', Arial, sans-serif;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="number"]:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        input[readonly] {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+        
+        .candidate-section {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .candidate-item {
+            margin-bottom: 12px;
+        }
+        
+        .candidate-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .ballot-section {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .result-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .section-title {
+            color: #667eea;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .final-result {
+            background: #f5e8e8;
+            border-left: 4px solid #af4c4c;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .summary-btn, .back-btn {
+            width: 100%;
+            padding: 15px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Noto Sans Bengali', Arial, sans-serif;
+            transition: transform 0.2s;
+        }
+        
+        .summary-btn:hover, .back-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .summary-btn:active, .back-btn:active {
+            transform: translateY(0);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .summary-item {
+            background: #f8f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .summary-item label {
+            margin: 0;
+            font-size: 16px;
+        }
+        
+        .summary-item .value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .summary-total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .summary-total .value {
+            font-size: 28px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        
+        .edit-question {
+            text-align: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            color: #666;
+            font-size: 12px;
+        }
+
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Main Page -->
+        <div id="mainPage">
+            <h1>ব্যালট গণনা সিস্টেম</h1>
+            
+            <div class="input-group">
+                <label for="candidateCount">প্রার্থী সংখ্যা কত?</label>
+                <select id="candidateCount" onchange="updateCandidates()">
+                    <option value="0">নির্বাচন করুন</option>
+                    <option value="2">২</option>
+                    <option value="3">৩</option>
+                    <option value="4">৪</option>
+                    <option value="5">৫</option>
+                    <option value="6">৬</option>
+                    <option value="7">৭</option>
+                    <option value="8">৮</option>
+                    <option value="9">৯</option>
+                    <option value="10">১০</option>
+                </select>
+            </div>
+            
+            <div id="candidatesSection" class="hidden">
+                <div class="candidate-section">
+                    <div class="section-title"> <span id="totalCandidates">০</span> জন প্রার্থীর প্রাপ্ত বৈধ ভোট সংখ্যা:</div>
+                    <div id="candidateInputs"></div>
+                </div>
+            </div>
+            
+            <div id="ballotSection" class="hidden">
+                <div class="ballot-section">
+                    <div class="input-group">
+                        <label>ক) মোট বৈধ ব্যালট সংখ্যা:</label>
+                        <input type="number" id="validDisplay" min="0" value="0" readonly>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>খ) মোট অবৈধ ব্যালট সংখ্যা:</label>
+                        <input type="number" id="invalid" min="0" value="0" oninput="calculateTotals()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>গ) মোট নষ্ট ব্যালট সংখ্যা:</label>
+                        <input type="number" id="spoiled" min="0" value="0" oninput="calculateTotals()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>ঘ) মোট আপত্তি ভোটের ব্যালট সংখ্যা:</label>
+                        <input type="number" id="objection" min="0" value="0" oninput="calculateTotals()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>ঙ) মোট টেন্ডার্ড ভোটের ব্যালট সংখ্যা:</label>
+                        <input type="number" id="casting" min="0" value="0" oninput="calculateTotals()">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>চ) মোট অব্যবহৃত ব্যালট সংখ্যা:</label>
+                        <input type="number" id="unused" min="0" value="0" oninput="calculateTotals()">
+                    </div>
+                </div>
+                
+                <div class="result-box">
+                    <strong>মোট ব্যবহৃত ব্যালট সংখ্যা (ক থেকে ঙ):</strong> <span id="usedBallots">০</span>
+                </div>
+                
+                <div class="result-box">
+                    <strong>মোট ব্যবহৃত ও অব্যবহৃত ব্যালট সংখ্যা:</strong> <span id="totalBallots">০</span>
+                </div>
+                
+                <div class="ballot-section" style="margin-top: 20px;">
+                    <div class="input-group">
+                        <label>ভোটকেন্দ্রের জন্য বরাদ্দকৃত মোট ব্যালট সংখ্যা:</label>
+                        <input type="number" id="allocated" min="0" value="0" oninput="calculateTotals()">
+                    </div>
+                </div>
+                
+                <div class="final-result">
+                    <strong>মোট হারানো ব্যালট সংখ্যা :</strong> <span id="finalLost">০</span>
+                </div>
+                
+                <button onclick="viewSummary()" class="summary-btn">সমগ্র হিসেব দেখুন</button>
+            </div>
+
+            <div class="footer">
+                সংস্করণ: ১.০.০ • বিনামূল্যে ব্যবহার করুন
+                <div style="margin-top: 10px;">
+                    Copyright © 2026 Mostafizur Rahman (AP, DoICT)<br>
+                    Email: mostafiz.rahman.r@gmail.com
+                </div>
+            </div>
+        </div>
+        
+        <!-- Summary Page -->
+        <div id="summaryPage" class="hidden">
+            <h1>সমগ্র হিসেব</h1>
+            
+            <div class="summary-item">
+                <label>ক) মোট বৈধ ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumValid">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>খ) মোট অবৈধ ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumInvalid">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>গ) মোট নষ্ট ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumSpoiled">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>ঘ) মোট আপত্তি ভোটের ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumObjection">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>ঙ) মোট টেন্ডার্ড ভোটের ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumCasting">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>চ) মোট অব্যবহৃত ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumUnused">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>ছ) মোট হারানো ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumLost">০</span>
+            </div>
+            
+            <div class="summary-total">
+                <div>অ্যাপের হিসেবে ভোটকেন্দ্রে মোট বরাদ্দকৃত ব্যালট সংখ্যা (ক থেকে ছ):</div>
+                <div class="value" id="sumTotal">০</div>
+            </div>
+            
+            <div class="edit-question">আপনি কি হিসেব এডিট করতে চান?</div>
+            
+            <button onclick="goBack()" class="back-btn">পূর্বের পেজে ফেরত যান</button>
+
+            <div class="footer">
+                সংস্করণ: ১.০.০ • বিনামূল্যে ব্যবহার করুন
+                <div style="margin-top: 10px;">
+                    Copyright © 2026 Mostafizur Rahman (AP, DoICT)<br>
+                    Email: mostafiz.rahman.r@gmail.com
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const bengaliNumbers = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        
+        function toBengaliNumber(num) {
+            return String(num).split('').map(digit => bengaliNumbers[digit] || digit).join('');
+        }
+        
+        function updateCandidates() {
+            const count = parseInt(document.getElementById('candidateCount').value);
+            const candidatesSection = document.getElementById('candidatesSection');
+            const ballotSection = document.getElementById('ballotSection');
+            const candidateInputs = document.getElementById('candidateInputs');
+            const totalCandidates = document.getElementById('totalCandidates');
+            
+            if (count === 0) {
+                candidatesSection.classList.add('hidden');
+                ballotSection.classList.add('hidden');
+                return;
+            }
+            
+            candidatesSection.classList.remove('hidden');
+            ballotSection.classList.remove('hidden');
+            totalCandidates.textContent = toBengaliNumber(count);
+            
+            candidateInputs.innerHTML = '';
+            for (let i = 1; i <= count; i++) {
+                const div = document.createElement('div');
+                div.className = 'candidate-item';
+                div.innerHTML = `
+                    <label>প্রার্থী ${toBengaliNumber(i)} এর বৈধ ভোট সংখ্যা:</label>
+                    <input type="number" class="candidate-vote" min="0" value="0" oninput="calculateValidVotes()">
+                `;
+                candidateInputs.appendChild(div);
+            }
+            
+            calculateValidVotes();
+        }
+        
+        function calculateValidVotes() {
+            const candidateVotes = document.querySelectorAll('.candidate-vote');
+            let total = 0;
+            
+            candidateVotes.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+            
+            document.getElementById('validDisplay').value = total;
+            calculateTotals();
+        }
+        
+        function calculateTotals() {
+            const validVotes = parseInt(document.getElementById('validDisplay').value) || 0;
+            const invalid = parseInt(document.getElementById('invalid').value) || 0;
+            const spoiled = parseInt(document.getElementById('spoiled').value) || 0;
+            const objection = parseInt(document.getElementById('objection').value) || 0;
+            const casting = parseInt(document.getElementById('casting').value) || 0;
+            const unused = parseInt(document.getElementById('unused').value) || 0;
+            const allocated = parseInt(document.getElementById('allocated').value) || 0;
+            
+            const usedBallots = validVotes + invalid + spoiled + objection + casting;
+            const totalBallots = usedBallots + unused;
+            const finalLost = allocated - totalBallots;
+            
+            document.getElementById('usedBallots').textContent = toBengaliNumber(usedBallots);
+            document.getElementById('totalBallots').textContent = toBengaliNumber(totalBallots);
+            document.getElementById('finalLost').textContent = toBengaliNumber(finalLost);
+        }
+        
+        function viewSummary() {
+            const validVotes = parseInt(document.getElementById('validDisplay').value) || 0;
+            const invalid = parseInt(document.getElementById('invalid').value) || 0;
+            const spoiled = parseInt(document.getElementById('spoiled').value) || 0;
+            const objection = parseInt(document.getElementById('objection').value) || 0;
+            const casting = parseInt(document.getElementById('casting').value) || 0;
+            const unused = parseInt(document.getElementById('unused').value) || 0;
+            const allocated = parseInt(document.getElementById('allocated').value) || 0;
+            
+            const totalBallots = validVotes + invalid + spoiled + objection + casting + unused;
+            const finalLost = allocated - totalBallots;
+            const grandTotal = validVotes + invalid + spoiled + objection + casting + unused + finalLost;
+            
+            document.getElementById('sumValid').textContent = toBengaliNumber(validVotes);
+            document.getElementById('sumInvalid').textContent = toBengaliNumber(invalid);
+            document.getElementById('sumSpoiled').textContent = toBengaliNumber(spoiled);
+            document.getElementById('sumObjection').textContent = toBengaliNumber(objection);
+            document.getElementById('sumCasting').textContent = toBengaliNumber(casting);
+            document.getElementById('sumUnused').textContent = toBengaliNumber(unused);
+            document.getElementById('sumLost').textContent = toBengaliNumber(finalLost);
+            document.getElementById('sumTotal').textContent = toBengaliNumber(grandTotal);
+            
+            document.getElementById('mainPage').classList.add('hidden');
+            document.getElementById('summaryPage').classList.remove('hidden');
+        }
+        
+        function goBack() {
+            document.getElementById('summaryPage').classList.add('hidden');
+            document.getElementById('mainPage').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
