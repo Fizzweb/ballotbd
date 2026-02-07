@@ -37,6 +37,16 @@
             font-size: 24px;
         }
         
+        h2 {
+            color: #667eea;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
         .input-group {
             margin-bottom: 20px;
         }
@@ -49,7 +59,7 @@
             font-size: 16px;
         }
         
-        input[type="number"], select {
+        input[type="number"], input[type="text"], select {
             width: 100%;
             padding: 12px;
             border: 2px solid #e0e0e0;
@@ -59,7 +69,7 @@
             transition: border-color 0.3s;
         }
         
-        input[type="number"]:focus, select:focus {
+        input[type="number"]:focus, input[type="text"]:focus, select:focus {
             outline: none;
             border-color: #667eea;
         }
@@ -77,11 +87,21 @@
         }
         
         .candidate-item {
-            margin-bottom: 12px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
         }
         
         .candidate-item:last-child {
             margin-bottom: 0;
+        }
+        
+        .candidate-item h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
         }
         
         .ballot-section {
@@ -116,7 +136,7 @@
             margin: 15px 0;
         }
         
-        .summary-btn, .back-btn {
+        .summary-btn, .back-btn, .forms-btn {
             width: 100%;
             padding: 15px;
             margin-top: 20px;
@@ -131,11 +151,11 @@
             transition: transform 0.2s;
         }
         
-        .summary-btn:hover, .back-btn:hover {
+        .summary-btn:hover, .back-btn:hover, .forms-btn:hover {
             transform: translateY(-2px);
         }
         
-        .summary-btn:active, .back-btn:active {
+        .summary-btn:active, .back-btn:active, .forms-btn:active {
             transform: translateY(0);
         }
         
@@ -205,33 +225,93 @@
         .footer a:hover {
             text-decoration: underline;
         }
+        
+        .form-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 12px;
+        }
+        
+        .form-header {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .form-row {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .form-row strong {
+            color: #333;
+        }
+        
+        .form-row .value {
+            color: #667eea;
+            font-weight: 700;
+        }
+        
+        .form-total-row {
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 700;
+        }
+        
+        .candidate-result {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .candidate-result h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Main Page -->
-        <div id="mainPage">
+        <!-- Input Page -->
+        <div id="inputPage">
             <h1>ব্যালট গণনা সিস্টেম</h1>
             
             <div class="input-group">
-                <label for="candidateCount">প্রার্থী সংখ্যা কত?</label>
-                <select id="candidateCount" onchange="updateCandidates()">
-                    <option value="0">নির্বাচন করুন</option>
-                    <option value="2">২</option>
-                    <option value="3">৩</option>
-                    <option value="4">৪</option>
-                    <option value="5">৫</option>
-                    <option value="6">৬</option>
-                    <option value="7">৭</option>
-                    <option value="8">৮</option>
-                    <option value="9">৯</option>
-                    <option value="10">১০</option>
+                <label for="candidateCount">প্রার্থী সংখ্যা নির্বাচন করুন:</label>
+                <select id="candidateCount">
+                    <option value="0">প্রার্থী সংখ্যা নির্বাচন করুন</option>
+                    <option value="1">১ জন প্রার্থী</option>
+                    <option value="2">২ জন প্রার্থী</option>
+                    <option value="3">৩ জন প্রার্থী</option>
+                    <option value="4">৪ জন প্রার্থী</option>
+                    <option value="5">৫ জন প্রার্থী</option>
+                    <option value="6">৬ জন প্রার্থী</option>
+                    <option value="7">৭ জন প্রার্থী</option>
+                    <option value="8">৮ জন প্রার্থী</option>
+                    <option value="9">৯ জন প্রার্থী</option>
+                    <option value="10">১০ জন প্রার্থী</option>
                 </select>
             </div>
             
             <div id="candidatesSection" class="hidden">
                 <div class="candidate-section">
-                    <div class="section-title"> <span id="totalCandidates">০</span> জন প্রার্থীর প্রাপ্ত বৈধ ভোট সংখ্যা:</div>
+                    <div class="section-title">মোট প্রার্থী সংখ্যা: <span id="totalCandidates">০</span></div>
                     <div id="candidateInputs"></div>
                 </div>
             </div>
@@ -239,38 +319,38 @@
             <div id="ballotSection" class="hidden">
                 <div class="ballot-section">
                     <div class="input-group">
-                        <label>ক) মোট বৈধ ব্যালট সংখ্যা:</label>
+                        <label>অ) মোট বৈধ ব্যালট সংখ্যা:</label>
                         <input type="number" id="validDisplay" min="0" value="0" readonly>
                     </div>
                     
                     <div class="input-group">
-                        <label>খ) মোট অবৈধ ব্যালট সংখ্যা:</label>
-                        <input type="number" id="invalid" min="0" value="0" oninput="calculateTotals()">
+                        <label>আ) মোট অবৈধ ব্যালট সংখ্যা:</label>
+                        <input type="number" id="invalid" min="0" value="0">
                     </div>
                     
                     <div class="input-group">
-                        <label>গ) মোট নষ্ট ব্যালট সংখ্যা:</label>
-                        <input type="number" id="spoiled" min="0" value="0" oninput="calculateTotals()">
+                        <label>ই) মোট টেন্ডার্ড ভোটের ব্যালট সংখ্যা:</label>
+                        <input type="number" id="casting" min="0" value="0">
                     </div>
                     
                     <div class="input-group">
-                        <label>ঘ) মোট আপত্তি ভোটের ব্যালট সংখ্যা:</label>
-                        <input type="number" id="objection" min="0" value="0" oninput="calculateTotals()">
+                        <label>ঈ) মোট আপত্তি ভোটের ব্যালট সংখ্যা:</label>
+                        <input type="number" id="objectionDisplay" min="0" value="0" readonly>
                     </div>
                     
                     <div class="input-group">
-                        <label>ঙ) মোট টেন্ডার্ড ভোটের ব্যালট সংখ্যা:</label>
-                        <input type="number" id="casting" min="0" value="0" oninput="calculateTotals()">
+                        <label>উ) মোট নষ্ট ব্যালট সংখ্যা:</label>
+                        <input type="number" id="spoiled" min="0" value="0">
                     </div>
                     
                     <div class="input-group">
-                        <label>চ) মোট অব্যবহৃত ব্যালট সংখ্যা:</label>
-                        <input type="number" id="unused" min="0" value="0" oninput="calculateTotals()">
+                        <label>ঊ) মোট অব্যবহৃত ব্যালট সংখ্যা:</label>
+                        <input type="number" id="unused" min="0" value="0">
                     </div>
                 </div>
                 
                 <div class="result-box">
-                    <strong>মোট ব্যবহৃত ব্যালট সংখ্যা (ক থেকে ঙ):</strong> <span id="usedBallots">০</span>
+                    <strong>মোট ব্যবহৃত ব্যালট সংখ্যা (অ থেকে উ):</strong> <span id="usedBallots">০</span>
                 </div>
                 
                 <div class="result-box">
@@ -280,7 +360,7 @@
                 <div class="ballot-section" style="margin-top: 20px;">
                     <div class="input-group">
                         <label>ভোটকেন্দ্রের জন্য বরাদ্দকৃত মোট ব্যালট সংখ্যা:</label>
-                        <input type="number" id="allocated" min="0" value="0" oninput="calculateTotals()">
+                        <input type="number" id="allocated" min="0" value="0">
                     </div>
                 </div>
                 
@@ -288,14 +368,14 @@
                     <strong>মোট হারানো ব্যালট সংখ্যা :</strong> <span id="finalLost">০</span>
                 </div>
                 
-                <button onclick="viewSummary()" class="summary-btn">সমগ্র হিসেব দেখুন</button>
+                <button class="summary-btn" id="summaryBtn">সমগ্র হিসেব দেখুন</button>
             </div>
 
             <div class="footer">
-                সংস্করণ: ১.০.১ • বিনামূল্যে ব্যবহার করুন
+                সংস্করণ: ১.২.০ • বিনামূল্যে ব্যবহার করুন
                 <div style="margin-top: 10px;">
                     Copyright © 2026 Mostafizur Rahman (AP, DoICT)<br>
-                    Email: mostafiz.rahman.r@gmail.com
+                    Email: <a href="mailto:mostafiz.rahman.r@gmail.com">mostafiz.rahman.r@gmail.com</a>
                 </div>
             </div>
         </div>
@@ -305,66 +385,194 @@
             <h1>সমগ্র হিসেব</h1>
             
             <div class="summary-item">
-                <label>ক) মোট বৈধ ব্যালট সংখ্যা:</label>
+                <label>অ) মোট বৈধ ব্যালট সংখ্যা:</label>
                 <span class="value" id="sumValid">০</span>
             </div>
             
             <div class="summary-item">
-                <label>খ) মোট অবৈধ ব্যালট সংখ্যা:</label>
+                <label>আ) মোট অবৈধ ব্যালট সংখ্যা:</label>
                 <span class="value" id="sumInvalid">০</span>
             </div>
             
             <div class="summary-item">
-                <label>গ) মোট নষ্ট ব্যালট সংখ্যা:</label>
-                <span class="value" id="sumSpoiled">০</span>
-            </div>
-            
-            <div class="summary-item">
-                <label>ঘ) মোট আপত্তি ভোটের ব্যালট সংখ্যা:</label>
-                <span class="value" id="sumObjection">০</span>
-            </div>
-            
-            <div class="summary-item">
-                <label>ঙ) মোট টেন্ডার্ড ভোটের ব্যালট সংখ্যা:</label>
+                <label>ই) মোট টেন্ডার্ড ভোটের ব্যালট সংখ্যা:</label>
                 <span class="value" id="sumCasting">০</span>
             </div>
             
             <div class="summary-item">
-                <label>চ) মোট অব্যবহৃত ব্যালট সংখ্যা:</label>
+                <label>ঈ) মোট আপত্তি ভোটের ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumObjection">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>উ) মোট নষ্ট ব্যালট সংখ্যা:</label>
+                <span class="value" id="sumSpoiled">০</span>
+            </div>
+            
+            <div class="summary-item">
+                <label>ঊ) মোট অব্যবহৃত ব্যালট সংখ্যা:</label>
                 <span class="value" id="sumUnused">০</span>
             </div>
             
             <div class="summary-item">
-                <label>ছ) মোট হারানো ব্যালট সংখ্যা:</label>
+                <label>ঋ) মোট হারানো ব্যালট সংখ্যা:</label>
                 <span class="value" id="sumLost">০</span>
             </div>
             
             <div class="summary-total">
-                <div>অ্যাপের হিসেবে ভোটকেন্দ্রে মোট বরাদ্দকৃত ব্যালট সংখ্যা (ক থেকে ছ):</div>
+                <div>অ্যাপের হিসেবে ভোটকেন্দ্রে মোট বরাদ্দকৃত ব্যালট সংখ্যা (অ থেকে ঋ):</div>
                 <div class="value" id="sumTotal">০</div>
             </div>
             
-            <div class="edit-question">আপনি কি হিসেব এডিট করতে চান?</div>
+            <button class="back-btn" onclick="goBack()">পূর্ববর্তী পেজে ফেরত যান</button>
             
-            <button onclick="goBack()" class="back-btn">পূর্বের পেজে ফেরত যান</button>
+            <div class="edit-question">হিসেব ঠিক থাকলে নিচের বাটনে ক্লিক করুন</div>
+            
+            <button class="forms-btn" id="formsBtn">ফরম ১৬ ও ফরম ১৭ দেখুন</button>
+            
+            <!-- Forms Section -->
+            <div id="formsSection" class="hidden">
+                <h2>ভোট গণনার বিবরণী (ফর্ম ১৬)</h2>
+                <div class="form-section">
+                    <div class="form-header">ফর্ম ১৬</div>
+                    
+                    <div class="form-row">
+                        <strong>নির্বাচনী এলাকার নম্বর ও নাম:</strong>
+                        <span class="value" id="form16AreaName">-</span>
+                    </div>
+
+                    <div class="form-row">
+                        <strong>ভোটকেন্দ্রের নম্বর ও নাম:</strong>
+                        <span class="value" id="form16CenterName">-</span>
+                    </div>                    
+                    
+                    <div class="form-row">
+                        <strong>মোট ভোটার সংখ্যা:</strong>
+                        <span class="value" id="form16TotalVoters">০</span>
+                    </div>
+                                       
+                    <div id="candidateResults"></div>
+                    
+                    <div class="form-total-row">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>১। প্রার্থীগণ কর্তৃক প্রাপ্ত মোট বৈধ ভোটের সংখ্যা:</span>
+                            <span id="form16TotalValid">০</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-total-row">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>২। মোট বাতিলকৃত (অবৈধ) ভোটের সংখ্যা:</span>
+                            <span id="form16TotalInvalid">০</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-total-row">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>৩। মোট প্রদত্ত ভোট সংখ্যা (১ ও ২ এর সমষ্টি):</span>
+                            <span id="form16GrandTotal">০</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <h2>ব্যালট পেপারের হিসাব (ফর্ম ১৭)</h2>
+                <div class="form-section">
+                    <div class="form-header">ফর্ম ১৭</div>
+                    
+                    <div class="form-row">
+                        <strong>নির্বাচনী এলাকার নম্বর ও নাম:</strong>
+                        <span class="value" id="form17AreaName">-</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <strong>মোট ভোটার সংখ্যা:</strong>
+                        <span class="value" id="form17TotalVoters">০</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <strong>ভোটকেন্দ্রের নম্বর ও নাম:</strong>
+                        <span class="value" id="form17CenterName">-</span>
+                    </div>
+                    
+                    <div class="form-total-row">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>১। প্রাপ্ত ব্যালট পেপারের মোট সংখ্যা:</span>
+                            <span id="form17Allocated">০</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <strong>২(ক) বাক্স হতে প্রাপ্ত ও গণনাকৃত মোট ব্যালট পেপার (বৈধ+অবৈধ):</strong>
+                        <span class="value" id="form17Counted">০</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <strong>২(খ) টেন্ডার্ড ব্যালট পেপারের মোট সংখ্যা:</strong>
+                        <span class="value" id="form17Tender">০</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <strong>২(গ) আপত্তিকৃত ব্যালট পেপারের মোট সংখ্যা:</strong>
+                        <span class="value" id="form17Objection">০</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <strong>২(ঘ) হারিয়ে যাওয়া ব্যালট পেপারের মোট সংখ্যা:</strong>
+                        <span class="value" id="form17Lost">০</span>
+                    </div>
+                    
+                    <div class="form-row">
+                        <strong>২(ঙ) বিনষ্ট/বাতিল ব্যালট পেপারের মোট সংখ্যা:</strong>
+                        <span class="value" id="form17Spoiled">০</span>
+                    </div>
+                    
+                    <div class="form-total-row">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>* ব্যবহৃত ব্যালট পেপারের মোট সংখ্যা (২(ক) থেকে ২(ঙ) সমষ্টি):</span>
+                            <span id="form17UsedTotal">০</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-total-row">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>৩। অব্যবহৃত ব্যালট পেপারের মোট সংখ্যা:</span>
+                            <span id="form17Unused">০</span>
+                        </div>
+                    </div>
+                    
+                    <div class="form-total-row">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>৪। ব্যালট পেপারের মোট সংখ্যা (২ ও ৩ সমষ্টি):</span>
+                            <span id="form17GrandTotal">০</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="back-btn" onclick="goBack()">পূর্ববর্তী পেজে ফেরত যান</button>
+            </div>
 
             <div class="footer">
-                সংস্করণ: ১.০.১ • বিনামূল্যে ব্যবহার করুন
+                সংস্করণ: ১.২.০ • বিনামূল্যে ব্যবহার করুন
                 <div style="margin-top: 10px;">
                     Copyright © 2026 Mostafizur Rahman (AP, DoICT)<br>
-                    Email: mostafiz.rahman.r@gmail.com
+                    Email: <a href="mailto:mostafiz.rahman.r@gmail.com">mostafiz.rahman.r@gmail.com</a>
                 </div>
             </div>
         </div>
     </div>
     
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        // Bengali number conversion
         const bengaliNumbers = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
         
         function toBengaliNumber(num) {
             return String(num).split('').map(digit => bengaliNumbers[digit] || digit).join('');
         }
         
+        // Global variables
+        let candidatesData = [];
+        
+        // Update candidates based on selection
         function updateCandidates() {
             const count = parseInt(document.getElementById('candidateCount').value);
             const candidatesSection = document.getElementById('candidatesSection');
@@ -383,19 +591,43 @@
             totalCandidates.textContent = toBengaliNumber(count);
             
             candidateInputs.innerHTML = '';
+            candidatesData = [];
+            
             for (let i = 1; i <= count; i++) {
                 const div = document.createElement('div');
                 div.className = 'candidate-item';
                 div.innerHTML = `
-                    <label>প্রার্থী ${toBengaliNumber(i)} এর বৈধ ভোট সংখ্যা:</label>
-                    <input type="number" class="candidate-vote" min="0" value="0" oninput="calculateValidVotes()">
+                    <h3>প্রার্থী ${toBengaliNumber(i)}</h3>
+                    <div class="input-group">
+                        <label>প্রার্থী ${toBengaliNumber(i)} এর নাম/মার্কা:</label>
+                        <input type="text" class="candidate-name" placeholder="নাম বা মার্কা লিখুন">
+                    </div>
+                    <div class="input-group">
+                        <label>প্রার্থী ${toBengaliNumber(i)} এর প্রাপ্ত বৈধ ভোট সংখ্যা:</label>
+                        <input type="number" class="candidate-vote" min="0" value="0">
+                    </div>
+                    <div class="input-group">
+                        <label>প্রার্থী ${toBengaliNumber(i)} এর প্রাপ্ত আপত্তিকৃত ভোট সংখ্যা:</label>
+                        <input type="number" class="candidate-objection" min="0" value="0">
+                    </div>
                 `;
                 candidateInputs.appendChild(div);
             }
             
+            // Add event listeners to newly created inputs
+            document.querySelectorAll('.candidate-vote').forEach(input => {
+                input.addEventListener('input', calculateValidVotes);
+            });
+            
+            document.querySelectorAll('.candidate-objection').forEach(input => {
+                input.addEventListener('input', calculateObjectionVotes);
+            });
+            
             calculateValidVotes();
+            calculateObjectionVotes();
         }
         
+        // Calculate total valid votes
         function calculateValidVotes() {
             const candidateVotes = document.querySelectorAll('.candidate-vote');
             let total = 0;
@@ -408,11 +640,25 @@
             calculateTotals();
         }
         
+        // Calculate total objection votes
+        function calculateObjectionVotes() {
+            const candidateObjections = document.querySelectorAll('.candidate-objection');
+            let total = 0;
+            
+            candidateObjections.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+            
+            document.getElementById('objectionDisplay').value = total;
+            calculateTotals();
+        }
+        
+        // Calculate all totals
         function calculateTotals() {
             const validVotes = parseInt(document.getElementById('validDisplay').value) || 0;
             const invalid = parseInt(document.getElementById('invalid').value) || 0;
             const spoiled = parseInt(document.getElementById('spoiled').value) || 0;
-            const objection = parseInt(document.getElementById('objection').value) || 0;
+            const objection = parseInt(document.getElementById('objectionDisplay').value) || 0;
             const casting = parseInt(document.getElementById('casting').value) || 0;
             const unused = parseInt(document.getElementById('unused').value) || 0;
             const allocated = parseInt(document.getElementById('allocated').value) || 0;
@@ -426,11 +672,12 @@
             document.getElementById('finalLost').textContent = toBengaliNumber(finalLost);
         }
         
+        // View summary page
         function viewSummary() {
             const validVotes = parseInt(document.getElementById('validDisplay').value) || 0;
             const invalid = parseInt(document.getElementById('invalid').value) || 0;
             const spoiled = parseInt(document.getElementById('spoiled').value) || 0;
-            const objection = parseInt(document.getElementById('objection').value) || 0;
+            const objection = parseInt(document.getElementById('objectionDisplay').value) || 0;
             const casting = parseInt(document.getElementById('casting').value) || 0;
             const unused = parseInt(document.getElementById('unused').value) || 0;
             const allocated = parseInt(document.getElementById('allocated').value) || 0;
@@ -448,14 +695,123 @@
             document.getElementById('sumLost').textContent = toBengaliNumber(finalLost);
             document.getElementById('sumTotal').textContent = toBengaliNumber(grandTotal);
             
-            document.getElementById('mainPage').classList.add('hidden');
+            document.getElementById('inputPage').classList.add('hidden');
             document.getElementById('summaryPage').classList.remove('hidden');
+            document.getElementById('formsSection').classList.add('hidden');
         }
         
+        // Go back to input page
         function goBack() {
             document.getElementById('summaryPage').classList.add('hidden');
-            document.getElementById('mainPage').classList.remove('hidden');
+            document.getElementById('inputPage').classList.remove('hidden');
         }
+        
+        // Show forms
+        function showForms() {
+            // Collect candidate data
+            const candidateNames = document.querySelectorAll('.candidate-name');
+            const candidateVotes = document.querySelectorAll('.candidate-vote');
+            const candidateObjections = document.querySelectorAll('.candidate-objection');
+            
+            candidatesData = [];
+            candidateNames.forEach((nameInput, index) => {
+                candidatesData.push({
+                    name: nameInput.value || `প্রার্থী ${toBengaliNumber(index + 1)}`,
+                    validVotes: parseInt(candidateVotes[index].value) || 0,
+                    objectionVotes: parseInt(candidateObjections[index].value) || 0
+                });
+            });
+            
+            const validVotes = parseInt(document.getElementById('validDisplay').value) || 0;
+            const invalid = parseInt(document.getElementById('invalid').value) || 0;
+            const spoiled = parseInt(document.getElementById('spoiled').value) || 0;
+            const objection = parseInt(document.getElementById('objectionDisplay').value) || 0;
+            const casting = parseInt(document.getElementById('casting').value) || 0;
+            const unused = parseInt(document.getElementById('unused').value) || 0;
+            const allocated = parseInt(document.getElementById('allocated').value) || 0;
+            const finalLost = allocated - (validVotes + invalid + spoiled + objection + casting + unused);
+            
+            // Form 16 Data
+            document.getElementById('form16AreaName').textContent = '-';
+            document.getElementById('form16TotalVoters').textContent = toBengaliNumber(allocated);
+            document.getElementById('form16CenterName').textContent = '-';
+            
+            // Candidate Results
+            const candidateResults = document.getElementById('candidateResults');
+            candidateResults.innerHTML = '';
+            
+            candidatesData.forEach((candidate, index) => {
+                const totalValid = candidate.validVotes + candidate.objectionVotes;
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'candidate-result';
+                resultDiv.innerHTML = `
+                    <h4>প্রার্থী ${toBengaliNumber(index + 1)}: ${candidate.name}</h4>
+                    <div class="form-row">
+                        <span>বৈধ ভোট:</span>
+                        <span class="value">${toBengaliNumber(candidate.validVotes)}</span>
+                    </div>
+                    <div class="form-row">
+                        <span>আপত্তিকৃত ভোট:</span>
+                        <span class="value">${toBengaliNumber(candidate.objectionVotes)}</span>
+                    </div>
+                    <div class="form-row" style="background: #e8f5e9;">
+                        <span><strong>মোট বৈধ ভোট:</strong></span>
+                        <span class="value"><strong>${toBengaliNumber(totalValid)}</strong></span>
+                    </div>
+                `;
+                candidateResults.appendChild(resultDiv);
+            });
+            
+            document.getElementById('form16TotalValid').textContent = toBengaliNumber(validVotes);
+            document.getElementById('form16TotalInvalid').textContent = toBengaliNumber(invalid);
+            document.getElementById('form16GrandTotal').textContent = toBengaliNumber(validVotes + invalid);
+            
+            // Form 17 Data
+            document.getElementById('form17AreaName').textContent = '-';
+            document.getElementById('form17TotalVoters').textContent = toBengaliNumber(allocated);
+            document.getElementById('form17CenterName').textContent = '-';
+            document.getElementById('form17Allocated').textContent = toBengaliNumber(allocated);
+            document.getElementById('form17Counted').textContent = toBengaliNumber(validVotes + invalid);
+            document.getElementById('form17Tender').textContent = toBengaliNumber(casting);
+            document.getElementById('form17Objection').textContent = toBengaliNumber(objection);
+            document.getElementById('form17Lost').textContent = toBengaliNumber(finalLost);
+            document.getElementById('form17Spoiled').textContent = toBengaliNumber(spoiled);
+            
+            const usedTotal = (validVotes + invalid) + casting + objection + finalLost + spoiled;
+            document.getElementById('form17UsedTotal').textContent = toBengaliNumber(usedTotal);
+            document.getElementById('form17Unused').textContent = toBengaliNumber(unused);
+            document.getElementById('form17GrandTotal').textContent = toBengaliNumber(allocated);
+            
+            // Show forms section
+            document.getElementById('formsSection').classList.remove('hidden');
+            
+            // Scroll to forms
+            setTimeout(() => {
+                document.getElementById('formsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+        
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Candidate count selector
+            document.getElementById('candidateCount').addEventListener('change', updateCandidates);
+            
+            // Summary button
+            document.getElementById('summaryBtn').addEventListener('click', viewSummary);
+            
+            // Forms button
+            document.getElementById('formsBtn').addEventListener('click', showForms);
+            
+            // Ballot inputs
+            document.getElementById('invalid').addEventListener('input', calculateTotals);
+            document.getElementById('spoiled').addEventListener('input', calculateTotals);
+            document.getElementById('casting').addEventListener('input', calculateTotals);
+            document.getElementById('unused').addEventListener('input', calculateTotals);
+            document.getElementById('allocated').addEventListener('input', calculateTotals);
+            
+            // Initialize
+            updateCandidates();
+        });
     </script>
 </body>
 </html>
